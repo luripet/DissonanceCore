@@ -1,15 +1,15 @@
+import { VdPluginManager } from "@core/dissonance/plugins";
+import { useProxy } from "@core/dissonance/storage";
 import { Strings } from "@core/i18n";
 import AddonPage from "@core/ui/components/AddonPage";
 import PluginCard from "@core/ui/settings/pages/Plugins/components/PluginCard";
-import { VdPluginManager } from "@core/vendetta/plugins";
-import { useProxy } from "@core/vendetta/storage";
 import { isCorePlugin, isPluginInstalled, pluginSettings, registeredPlugins } from "@lib/addons/plugins";
 import { Author } from "@lib/addons/types";
 import { findAssetId } from "@lib/api/assets";
 import { settings } from "@lib/api/settings";
 import { useObservable } from "@lib/api/storage";
 import { showToast } from "@lib/ui/toasts";
-import { BUNNY_PROXY_PREFIX, VD_PROXY_PREFIX } from "@lib/utils/constants";
+import { DISSONANCE_PROXY_PREFIX, VD_PROXY_PREFIX } from "@lib/utils/constants";
 import { lazyDestructure } from "@lib/utils/lazy";
 import { findByProps } from "@metro";
 import { NavigationNative } from "@metro/common";
@@ -18,8 +18,8 @@ import { ComponentProps } from "react";
 import { View } from "react-native";
 
 import { UnifiedPluginModel } from "./models";
-import unifyBunnyPlugin from "./models/bunny";
-import unifyVdPlugin from "./models/vendetta";
+import unifyDissonancePlugin from "./models/dissonance";
+import unifyDissonanceCorePlugin from "./models/dissonanceCore";
 
 const { openAlert } = lazyDestructure(() => findByProps("openAlert", "dismissAlert"));
 const { AlertModal, AlertActions, AlertActionButton } = lazyDestructure(() => findByProps("AlertModal", "AlertActions"));
@@ -60,13 +60,15 @@ export default function Plugins() {
             useProxy(VdPluginManager.plugins);
             useObservable([pluginSettings]);
 
-            const vdPlugins = Object.values(VdPluginManager.plugins).map(unifyVdPlugin);
-            const bnPlugins = [...registeredPlugins.values()].filter(p => isPluginInstalled(p.id) && !isCorePlugin(p.id)).map(unifyBunnyPlugin);
+            const dissonancePlugins = Object.values(VdPluginManager.plugins).map(unifyDissonancePlugin);
+            const dissonanceCorePlugins = [...registeredPlugins.values()]
+                .filter(p => isPluginInstalled(p.id) && !isCorePlugin(p.id))
+                .map(unifyDissonanceCorePlugin);
 
-            return [...vdPlugins, ...bnPlugins];
+            return [...dissonancePlugins, ...dissonanceCorePlugins];
         }}
         ListHeaderComponent={() => {
-            const unproxiedPlugins = Object.values(VdPluginManager.plugins).filter(p => !p.id.startsWith(VD_PROXY_PREFIX) && !p.id.startsWith(BUNNY_PROXY_PREFIX));
+            const unproxiedPlugins = Object.values(VdPluginManager.plugins).filter(p => !p.id.startsWith(VD_PROXY_PREFIX) && !p.id.startsWith(DISSONANCE_PROXY_PREFIX));
             if (!unproxiedPlugins.length) return null;
 
             return <View style={{ marginVertical: 12, marginHorizontal: 10 }}>
@@ -85,7 +87,7 @@ export default function Plugins() {
                                 icon={findAssetId("CircleInformationIcon-primary")}
                                 style={{ marginLeft: 8 }}
                                 onPress={() => {
-                                    navigation.push("BUNNY_CUSTOM_PAGE", {
+                                    navigation.push("DISSONANCE_CUSTOM_PAGE", {
                                         title: "Unproxied Plugins",
                                         render: () => {
                                             return <FlashList
@@ -111,7 +113,7 @@ export default function Plugins() {
                 text="Browse Plugins"
                 icon={findAssetId("CompassIcon")}
                 onPress={() => {
-                    navigation.push("BUNNY_CUSTOM_PAGE", {
+                    navigation.push("DISSONANCE_CUSTOM_PAGE", {
                         title: "Plugin Browser",
                         render: React.lazy(() => import("../PluginBrowser")),
                     });
@@ -122,8 +124,8 @@ export default function Plugins() {
         installAction={{
             label: "Install a plugin",
             fetchFn: async (url: string) => {
-                if (!url.startsWith(VD_PROXY_PREFIX) && !url.startsWith(BUNNY_PROXY_PREFIX) && !settings.developerSettings) {
-                    openAlert("bunny-plugin-unproxied-confirmation", <AlertModal
+                if (!url.startsWith(VD_PROXY_PREFIX) && !url.startsWith(DISSONANCE_PROXY_PREFIX) && !settings.developerSettings) {
+                    openAlert("dissonance-plugin-unproxied-confirmation", <AlertModal
                         title="Hold On!"
                         content="You're trying to install a plugin from an unproxied external source. This means you're trusting the creator to run their code in this app without your knowledge. Are you sure you want to continue?"
                         extraContent={<Card><Text variant="text-md/bold">{url}</Text></Card>}
@@ -131,7 +133,7 @@ export default function Plugins() {
                             <AlertActionButton text="Continue" variant="primary" onPress={() => {
                                 VdPluginManager.installPlugin(url)
                                     .then(() => showToast(Strings.TOASTS_INSTALLED_PLUGIN, findAssetId("Check")))
-                                    .catch(e => openAlert("bunny-plugin-install-failed", <AlertModal
+                                    .catch(e => openAlert("dissonance-plugin-install-failed", <AlertModal
                                         title="Install Failed"
                                         content={`Unable to install plugin from '${url}':`}
                                         extraContent={<Card><Text variant="text-md/normal">{e instanceof Error ? e.message : String(e)}</Text></Card>}

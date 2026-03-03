@@ -33,7 +33,7 @@ export function wrapOnPress(
         }
 
         navigation ??= tabsNavigationRef.getRootNavigationRef();
-        navigation.navigate("BUNNY_CUSTOM_PAGE", {
+        navigation.navigate("DISSONANCE_CUSTOM_PAGE", {
             ...screenOptions,
             render: () => <Component {...props} />
         });

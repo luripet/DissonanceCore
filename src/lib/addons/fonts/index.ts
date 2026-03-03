@@ -1,4 +1,4 @@
-import { awaitStorage, createMMKVBackend, createStorage, wrapSync } from "@core/vendetta/storage";
+import { awaitStorage, createMMKVBackend, createStorage, wrapSync } from "@core/dissonance/storage";
 import { clearFolder, downloadFile, fileExists, removeFile, writeFile } from "@lib/api/native/fs";
 import { safeFetch } from "@lib/utils";
 
@@ -14,7 +14,7 @@ export interface FontDefinition {
 }
 
 type FontStorage = Record<string, FontDefinition> & { __selected?: string; };
-export const fonts = wrapSync(createStorage<FontStorage>(createMMKVBackend("BUNNY_FONTS")));
+export const fonts = wrapSync(createStorage<FontStorage>(createMMKVBackend("DISSONANCE_FONTS")));
 
 async function writeFont(font: FontDefinition | null) {
     if (!font && font !== null) throw new Error("Arg font must be a valid object or null");

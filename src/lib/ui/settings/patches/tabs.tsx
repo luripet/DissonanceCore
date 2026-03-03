@@ -40,19 +40,19 @@ export function patchTabsUI(unpatches: (() => void | boolean)[]) {
         configurable: true,
         get: () => ({
             ...rendererConfigValue,
-            VendettaCustomPage: {
+            DissonanceCustomPage: {
                 type: "route",
-                title: () => "Bunny",
+                title: () => "Dissonance",
                 screen: {
-                    route: "VendettaCustomPage",
+                    route: "DissonanceCustomPage",
                     getComponent: () => CustomPageRenderer
                 }
             },
-            BUNNY_CUSTOM_PAGE: {
+            DISSONANCE_CUSTOM_PAGE: {
                 type: "route",
-                title: () => "Bunny",
+                title: () => "Dissonance",
                 screen: {
-                    route: "BUNNY_CUSTOM_PAGE",
+                    route: "DISSONANCE_CUSTOM_PAGE",
                     getComponent: () => CustomPageRenderer
                 }
             },

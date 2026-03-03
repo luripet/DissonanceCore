@@ -1,4 +1,4 @@
-import { createFileBackend, createMMKVBackend, createStorage, wrapSync } from "@core/vendetta/storage";
+import { createFileBackend, createMMKVBackend, createStorage, wrapSync } from "@core/dissonance/storage";
 import { getLoaderConfigPath } from "@lib/api/native/loader";
 
 export interface Settings {
@@ -20,13 +20,13 @@ export interface LoaderConfig {
     loadReactDevTools: boolean;
 }
 
-export const settings = wrapSync(createStorage<Settings>(createMMKVBackend("VENDETTA_SETTINGS")));
+export const settings = wrapSync(createStorage<Settings>(createMMKVBackend("DISSONANCE_SETTINGS")));
 
 export const loaderConfig = wrapSync(createStorage<LoaderConfig>(
     createFileBackend(getLoaderConfigPath(), {
         customLoadUrl: {
             enabled: false,
-            url: "http://localhost:4040/bunny.js"
+            url: "http://localhost:4040/dissonance.js"
         }
     })
 ));

@@ -1,6 +1,6 @@
+import { VdPluginManager } from "@core/dissonance/plugins";
+import { useProxy } from "@core/dissonance/storage";
 import { Strings } from "@core/i18n";
-import { VdPluginManager } from "@core/vendetta/plugins";
-import { useProxy } from "@core/vendetta/storage";
 import { installTheme, removeTheme, themes } from "@lib/addons/themes";
 import { findAssetId } from "@lib/api/assets";
 import { isThemeSupported } from "@lib/api/native/loader";

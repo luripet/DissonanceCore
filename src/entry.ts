@@ -1,10 +1,10 @@
-import { version } from "bunny-build-info";
+import { version } from "dissonance-build-info";
 const { instead } = require("spitroast");
 
 // @ts-ignore - shut up fr
 globalThis.window = globalThis;
 
-async function initializeBunny() {
+async function initializeDissonance() {
     try {
         // Make 'freeze' and 'seal' do nothing
         Object.freeze = Object.seal = Object;
@@ -17,9 +17,9 @@ async function initializeBunny() {
 
         console.log(stack ?? e?.toString?.() ?? e);
         alert([
-            "Failed to load Bunny!\n",
+            "Failed to load Dissonance!\n",
             `Build Number: ${ClientInfoManager.Build}`,
-            `Bunny: ${version}`,
+            `Dissonance: ${version}`,
             stack || e?.toString?.(),
         ].join("\n"));
     }
@@ -27,7 +27,7 @@ async function initializeBunny() {
 
 // @ts-ignore
 if (typeof globalThis.__r !== "undefined") {
-    initializeBunny();
+    initializeDissonance();
 } else {
     // We hold calls from the native side
     function onceIndexRequired(originalRequire: any) {
@@ -44,7 +44,7 @@ if (typeof globalThis.__r !== "undefined") {
         });
 
         const startDiscord = async () => {
-            await initializeBunny();
+            await initializeDissonance();
             unpatchHook();
             originalRequire(0);
 

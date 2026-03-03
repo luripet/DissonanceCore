@@ -1,10 +1,10 @@
+import { useProxy } from "@core/dissonance/storage";
 import { Strings } from "@core/i18n";
 import { CheckState, useFileExists } from "@core/ui/hooks/useFS";
 import AssetBrowser from "@core/ui/settings/pages/Developer/AssetBrowser";
-import { useProxy } from "@core/vendetta/storage";
 import { findAssetId } from "@lib/api/assets";
 import { connectToDebugger } from "@lib/api/debug";
-import { getReactDevToolsProp, getReactDevToolsVersion, isLoaderConfigSupported, isReactDevToolsPreloaded, isVendettaLoader } from "@lib/api/native/loader";
+import { getReactDevToolsProp, getReactDevToolsVersion, isDissonanceLoader,isLoaderConfigSupported, isReactDevToolsPreloaded } from "@lib/api/native/loader";
 import { loaderConfig, settings } from "@lib/api/settings";
 import { lazyDestructure } from "@lib/utils/lazy";
 import { NavigationNative } from "@metro/common";
@@ -59,7 +59,7 @@ export default function Developer() {
                             <TableRow
                                 label={Strings.CONNECT_TO_REACT_DEVTOOLS}
                                 icon={<TableRow.Icon source={findAssetId("ic_badge_staff")} />}
-                                onPress={() => window[getReactDevToolsProp() || "__vendetta_rdc"]?.connectToDevTools({
+                                onPress={() => window[getReactDevToolsProp() || "__dissonance_rdc"]?.connectToDevTools({
                                     host: settings.debuggerUrl.split(":")?.[0],
                                     resolveRNStyle: StyleSheet.flatten,
                                 })}
@@ -81,10 +81,10 @@ export default function Developer() {
                                 defaultValue={loaderConfig.customLoadUrl.url}
                                 size="md"
                                 onChange={(v: string) => loaderConfig.customLoadUrl.url = v}
-                                placeholder="http://localhost:4040/vendetta.js"
-                                label={Strings.BUNNY_URL}
+                                placeholder="http://localhost:4040/dissonance.js"
+                                label={Strings.DISSONANCE_URL}
                             />} />}
-                            {isReactDevToolsPreloaded() && isVendettaLoader() && <TableSwitchRow
+                            {isReactDevToolsPreloaded() && isDissonanceLoader() && <TableSwitchRow
                                 label={Strings.LOAD_REACT_DEVTOOLS}
                                 subLabel={`${Strings.VERSION}: ${getReactDevToolsVersion()}`}
                                 icon={<TableRow.Icon source={findAssetId("ic_badge_staff")} />}
@@ -101,7 +101,7 @@ export default function Developer() {
                             label={Strings.ASSET_BROWSER}
                             icon={<TableRow.Icon source={findAssetId("ic_image")} />}
                             trailing={TableRow.Arrow}
-                            onPress={() => navigation.push("BUNNY_CUSTOM_PAGE", {
+                            onPress={() => navigation.push("DISSONANCE_CUSTOM_PAGE", {
                                 title: Strings.ASSET_BROWSER,
                                 render: AssetBrowser,
                             })}
@@ -120,8 +120,8 @@ export default function Developer() {
                                 options: [
                                     // @ts-expect-error
                                     // Of course, to trigger an error, we need to do something incorrectly. The below will do!
-                                    { label: Strings.BUNNY, onPress: () => navigation.push("BUNNY_CUSTOM_PAGE", { render: () => <undefined /> }) },
-                                    { label: "Discord", isDestructive: true, onPress: () => navigation.push("BUNNY_CUSTOM_PAGE", { noErrorBoundary: true }) },
+                                    { label: Strings.DISSONANCE, onPress: () => navigation.push("DISSONANCE_CUSTOM_PAGE", { render: () => <undefined /> }) },
+                                    { label: "Discord", isDestructive: true, onPress: () => navigation.push("DISSONANCE_CUSTOM_PAGE", { noErrorBoundary: true }) },
                                 ],
                             })}
                         />

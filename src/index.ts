@@ -1,9 +1,9 @@
 import patchErrorBoundary from "@core/debug/patches/patchErrorBoundary";
+import { initDissonanceObject } from "@core/dissonance/api";
+import { VdPluginManager } from "@core/dissonance/plugins";
 import initFixes from "@core/fixes";
 import { initFetchI18nStrings } from "@core/i18n";
 import initSettings from "@core/ui/settings";
-import { initVendettaObject } from "@core/vendetta/api";
-import { VdPluginManager } from "@core/vendetta/plugins";
 import { updateFonts } from "@lib/addons/fonts";
 import { initPlugins, updatePlugins } from "@lib/addons/plugins";
 import { initThemes } from "@lib/addons/themes";
@@ -25,7 +25,7 @@ export default async () => {
         patchLogHook(),
         patchCommands(),
         patchJsx(),
-        initVendettaObject(),
+        initDissonanceObject(),
         initFetchI18nStrings(),
         initSettings(),
         initFixes(),
@@ -37,19 +37,19 @@ export default async () => {
     );
 
     // Assign window object
-    window.bunny = lib;
+    window.dissonance = lib;
 
-    // Once done, load Vendetta plugins
+    // Once done, load Dissonance plugins
     VdPluginManager.initPlugins()
         .then(u => lib.unload.push(u))
-        .catch(() => alert("Failed to initialize Vendetta plugins"));
+        .catch(() => alert("Failed to initialize Dissonance plugins"));
 
-    // And then, load Bunny plugins
+    // And then, load Dissonance plugins
     initPlugins();
 
     // Update the fonts
     updateFonts();
 
     // We good :)
-    logger.log("Bunny is ready!");
+    logger.log("Dissonance is ready!");
 };

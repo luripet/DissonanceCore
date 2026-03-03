@@ -1,9 +1,9 @@
-import { Emitter, EmitterEvent, EmitterListener, EmitterListenerData } from "@core/vendetta/Emitter";
+import { Emitter, EmitterEvent, EmitterListener, EmitterListenerData } from "@core/dissonance/Emitter";
 import { NativeCacheModule, NativeFileModule } from "@lib/api/native/modules";
 import { Platform } from "react-native";
 
-const emitterSymbol = Symbol.for("vendetta.storage.emitter");
-const syncAwaitSymbol = Symbol.for("vendetta.storage.accessor");
+const emitterSymbol = Symbol.for("dissonance.storage.emitter");
+const syncAwaitSymbol = Symbol.for("dissonance.storage.accessor");
 
 export function createProxy(target: any = {}): { proxy: any; emitter: Emitter; } {
     const emitter = new Emitter();

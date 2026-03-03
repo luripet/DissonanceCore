@@ -1,8 +1,8 @@
-import { awaitStorage, createMMKVBackend, createStorage, purgeStorage, wrapSync } from "@core/vendetta/storage";
+import { awaitStorage, createMMKVBackend, createStorage, purgeStorage, wrapSync } from "@core/dissonance/storage";
 import { Author } from "@lib/addons/types";
 import { settings } from "@lib/api/settings";
 import { safeFetch } from "@lib/utils";
-import { BUNNY_PROXY_PREFIX, VD_PROXY_PREFIX } from "@lib/utils/constants";
+import { DISSONANCE_PROXY_PREFIX, VD_PROXY_PREFIX } from "@lib/utils/constants";
 import { logger,LoggerClass } from "@lib/utils/logger";
 
 type EvaledPlugin = {
@@ -11,7 +11,7 @@ type EvaledPlugin = {
     settings: React.ComponentType<unknown>;
 };
 
-// See https://github.com/vendetta-mod/polymanifest
+// See https://github.com/dissonance-mod/polymanifest
 interface PluginManifest {
     name: string;
     description: string;
@@ -19,12 +19,12 @@ interface PluginManifest {
     main: string;
     hash: string;
     // Vendor-specific field, contains our own data
-    vendetta?: {
+    dissonance?: {
         icon?: string;
     };
 }
 
-export interface VendettaPlugin {
+export interface DissonancePlugin {
     id: string;
     manifest: PluginManifest;
     enabled: boolean;
@@ -32,7 +32,7 @@ export interface VendettaPlugin {
     js: string;
 }
 
-const plugins = wrapSync(createStorage<Record<string, VendettaPlugin>>(createMMKVBackend("VENDETTA_PLUGINS")));
+const plugins = wrapSync(createStorage<Record<string, DissonancePlugin>>(createMMKVBackend("DISSONANCE_PLUGINS")));
 const pluginInstance: Record<string, EvaledPlugin> = {};
 
 export const VdPluginManager = {
@@ -40,8 +40,8 @@ export const VdPluginManager = {
     async pluginFetch(url: string) {
         if (url.startsWith(VD_PROXY_PREFIX)) {
             url = url
-                .replace("https://bunny-mod.github.io/plugins-proxy", BUNNY_PROXY_PREFIX)
-                .replace(VD_PROXY_PREFIX, BUNNY_PROXY_PREFIX);
+                .replace("https://dissonance-mod.github.io/plugins-proxy", DISSONANCE_PROXY_PREFIX)
+                .replace(VD_PROXY_PREFIX, DISSONANCE_PROXY_PREFIX);
         }
 
         return await safeFetch(url, { cache: "no-store" });
@@ -89,20 +89,20 @@ export const VdPluginManager = {
     /**
      * @internal
      */
-    async evalPlugin(plugin: VendettaPlugin) {
-        const vendettaForPlugins = {
-            ...window.vendetta,
+    async evalPlugin(plugin: DissonancePlugin) {
+        const dissonanceForPlugins = {
+            ...window.dissonance,
             plugin: {
                 id: plugin.id,
                 manifest: plugin.manifest,
                 // Wrapping this with wrapSync is NOT an option.
                 storage: await createStorage<Record<string, any>>(createMMKVBackend(plugin.id)),
             },
-            logger: new LoggerClass(`Bunny » ${plugin.manifest.name}`),
+            logger: new LoggerClass(`Dissonance » ${plugin.manifest.name}`),
         };
-        const pluginString = `vendetta=>{return ${plugin.js}}\n//# sourceURL=${plugin.id}`;
+        const pluginString = `dissonance=>{return ${plugin.js}}\n//# sourceURL=${plugin.id}`;
 
-        const raw = (0, eval)(pluginString)(vendettaForPlugins);
+        const raw = (0, eval)(pluginString)(dissonanceForPlugins);
         const ret = typeof raw === "function" ? raw() : raw;
         return ret?.default ?? ret ?? {};
     },

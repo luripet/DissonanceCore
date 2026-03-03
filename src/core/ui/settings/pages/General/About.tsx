@@ -1,7 +1,7 @@
+import { useProxy } from "@core/dissonance/storage";
 import { Strings } from "@core/i18n";
-import { PyoncordIcon } from "@core/ui/settings";
+import { DissonanceIcon } from "@core/ui/settings";
 import Version from "@core/ui/settings/pages/General/Version";
-import { useProxy } from "@core/vendetta/storage";
 import { getDebugInfo } from "@lib/api/debug";
 import { settings } from "@lib/api/settings";
 import { Stack, TableRowGroup } from "@metro/common/components";
@@ -13,9 +13,9 @@ export default function About() {
 
     const versions = [
         {
-            label: Strings.BUNNY,
-            version: debugInfo.bunny.version,
-            icon: { uri: PyoncordIcon },
+            label: Strings.DISSONANCE,
+            version: debugInfo.dissonance.version,
+            icon: { uri: DissonanceIcon },
         },
         {
             label: "Discord",
@@ -42,7 +42,7 @@ export default function About() {
     const platformInfo = [
         {
             label: Strings.LOADER,
-            version: `${debugInfo.bunny.loader.name} (${debugInfo.bunny.loader.version})`,
+            version: `${debugInfo.dissonance.loader.name} (${debugInfo.dissonance.loader.version})`,
             icon: "DownloadIcon",
         },
         {

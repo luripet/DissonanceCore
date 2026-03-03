@@ -4,7 +4,7 @@ import { createStorage } from "@lib/api/storage";
 import { logger } from "@lib/utils/logger";
 
 import { registeredPlugins } from ".";
-import { BunnyPluginObject } from "./types";
+import { DissonancePluginObject } from "./types";
 
 type DisposableFn = (...props: any[]) => () => unknown;
 function shimDisposableFn<F extends DisposableFn>(unpatches: (() => void)[], f: F): F {
@@ -22,35 +22,35 @@ function shimDisposableFn<F extends DisposableFn>(unpatches: (() => void)[], f: 
     return dummy;
 }
 
-export function createBunnyPluginApi(id: string) {
+export function createDissonancePluginApi(id: string) {
     const disposers = new Array<DisposableFn>;
 
     // proxying this would be a good idea
     const object = {
-        ...window.bunny,
+        ...window.dissonance,
         api: {
-            ...window.bunny.api,
+            ...window.dissonance.api,
             patcher: {
                 before: shimDisposableFn(disposers, patcher.before),
                 after: shimDisposableFn(disposers, patcher.after),
                 instead: shimDisposableFn(disposers, patcher.instead)
             },
             commands: {
-                ...window.bunny.api.commands,
+                ...window.dissonance.api.commands,
                 registerCommand: shimDisposableFn(disposers, registerCommand)
             },
             flux: {
-                ...window.bunny.api.flux,
-                intercept: shimDisposableFn(disposers, window.bunny.api.flux.intercept)
+                ...window.dissonance.api.flux,
+                intercept: shimDisposableFn(disposers, window.dissonance.api.flux.intercept)
             }
         },
-        // Added something in here? Make sure to also update BunnyPluginProperty in ./types
+        // Added something in here? Make sure to also update DissonancePluginProperty in ./types
         plugin: {
             createStorage: <T extends object = any>() => createStorage<T>(`plugins/storage/${id}.json`),
             manifest: registeredPlugins.get(id),
             logger
         }
-    } as unknown as BunnyPluginObject;
+    } as unknown as DissonancePluginObject;
 
     return {
         object,

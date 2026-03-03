@@ -1,11 +1,11 @@
-import * as alerts from "@core/vendetta/alerts";
-import * as storage from "@core/vendetta/storage";
-import { createStorage } from "@core/vendetta/storage";
+import * as alerts from "@core/dissonance/alerts";
+import * as storage from "@core/dissonance/storage";
+import { createStorage } from "@core/dissonance/storage";
 import * as themes from "@lib/addons/themes";
 import * as assets from "@lib/api/assets";
 import * as commands from "@lib/api/commands";
 import * as debug from "@lib/api/debug";
-import { getVendettaLoaderIdentity, isPyonLoader } from "@lib/api/native/loader";
+import { getDissonanceLoaderIdentity, isPyonLoader } from "@lib/api/native/loader";
 import patcher from "@lib/api/patcher";
 import { loaderConfig, settings } from "@lib/api/settings";
 import * as utils from "@lib/utils";
@@ -23,22 +23,22 @@ import { omit } from "es-toolkit";
 import { createElement, useEffect } from "react";
 import { View } from "react-native";
 
-import { VdPluginManager, VendettaPlugin } from "./plugins";
+import { DissonancePlugin,VdPluginManager } from "./plugins";
 
-export async function createVdPluginObject(plugin: VendettaPlugin) {
+export async function createVdPluginObject(plugin: DissonancePlugin) {
     return {
-        ...window.vendetta,
+        ...window.dissonance,
         plugin: {
             id: plugin.id,
             manifest: plugin.manifest,
             // Wrapping this with wrapSync is NOT an option.
             storage: await createStorage<Record<string, any>>(storage.createMMKVBackend(plugin.id)),
         },
-        logger: new LoggerClass(`Bunny » ${plugin.manifest.name}`),
+        logger: new LoggerClass(`Dissonance » ${plugin.manifest.name}`),
     };
 }
 
-export const initVendettaObject = (): any => {
+export const initDissonanceObject = (): any => {
     // pitfall: this assumes the returning module(s) are the same within the same location
     // find(m => m.render?.name === "ActionSheet") - would work fine
     // ["trackThis", "trackThat"].forEach(p => find(m => m[p])) - would not
@@ -48,7 +48,7 @@ export const initVendettaObject = (): any => {
         };
     };
 
-    const api = window.vendetta = {
+    const api = window.dissonance = {
         patcher: {
             before: patcher.before,
             after: patcher.after,
@@ -127,7 +127,7 @@ export const initVendettaObject = (): any => {
         },
         constants: {
             DISCORD_SERVER: "https://discord.gg/n9QQ4XhhJP",
-            GITHUB: "https://github.com/vendetta-mod",
+            GITHUB: "https://github.com/dissonance-mod",
             PROXY_PREFIX: "https://vd-plugins.github.io/proxy",
             HTTP_REGEX: /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/,
             HTTP_REGEX_MULTI: /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)/g,
@@ -225,9 +225,9 @@ export const initVendettaObject = (): any => {
             awaitSyncWrapper: (store: any) => storage.awaitStorage(store),
             createMMKVBackend: (store: string) => storage.createMMKVBackend(store),
             createFileBackend: (file: string) => {
-                // Redirect path to vendetta_theme.json
-                if (isPyonLoader() && file === "vendetta_theme.json") {
-                    file = "pyoncord/current-theme.json";
+                // Redirect path to dissonance_theme.json
+                if (isPyonLoader() && file === "dissonance_theme.json") {
+                    file = "dissonance/current-theme.json";
                 }
 
                 return storage.createFileBackend(file);
@@ -235,7 +235,7 @@ export const initVendettaObject = (): any => {
         },
         settings,
         loader: {
-            identity: getVendettaLoaderIdentity() ?? void 0,
+            identity: getDissonanceLoaderIdentity() ?? void 0,
             config: loaderConfig,
         },
         logger: {
@@ -249,7 +249,7 @@ export const initVendettaObject = (): any => {
         },
         version: debug.versionHash,
         unload: () => {
-            delete window.vendetta;
+            delete window.dissonance;
         },
     };
 

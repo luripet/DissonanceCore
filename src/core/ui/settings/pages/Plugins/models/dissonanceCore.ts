@@ -1,11 +1,11 @@
-import { PyoncordIcon } from "@core/ui/settings";
+import { DissonanceIcon } from "@core/ui/settings";
 import { disablePlugin, enablePlugin, getPluginSettingsComponent, isPluginEnabled, pluginSettings } from "@lib/addons/plugins";
-import { BunnyPluginManifest } from "@lib/addons/plugins/types";
+import { DissonancePluginManifest } from "@lib/addons/plugins/types";
 import { useObservable } from "@lib/api/storage";
 
 import { UnifiedPluginModel } from ".";
 
-export default function unifyBunnyPlugin(manifest: BunnyPluginManifest): UnifiedPluginModel {
+export default function unifyDissonancePlugin(manifest: DissonancePluginManifest): UnifiedPluginModel {
     return {
         id: manifest.id,
         name: manifest.display.name,
@@ -14,7 +14,7 @@ export default function unifyBunnyPlugin(manifest: BunnyPluginManifest): Unified
 
         getBadges() {
             return [
-                { source: { uri: PyoncordIcon } },
+                { source: { uri: DissonanceIcon } },
                 // { source: findAssetId("CheckmarkLargeBoldIcon")! }
             ];
         },

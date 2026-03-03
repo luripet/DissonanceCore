@@ -1,5 +1,5 @@
+import { DissonancePlugin,VdPluginManager } from "@core/dissonance/plugins";
 import { Strings } from "@core/i18n";
-import { VdPluginManager, VendettaPlugin } from "@core/vendetta/plugins";
 import { ApplicationCommand, ApplicationCommandOptionType } from "@lib/api/commands/types";
 import { messageUtil } from "@metro/common";
 
@@ -15,7 +15,7 @@ export default () => <ApplicationCommand>{
         }
     ],
     execute([ephemeral], ctx) {
-        const plugins = Object.values(VdPluginManager.plugins).filter(Boolean) as unknown as VendettaPlugin[];
+        const plugins = Object.values(VdPluginManager.plugins).filter(Boolean) as unknown as DissonancePlugin[];
         plugins.sort((a, b) => a.manifest.name.localeCompare(b.manifest.name));
 
         const enabled = plugins.filter(p => p.enabled).map(p => p.manifest.name);

@@ -1,7 +1,7 @@
+import { useProxy } from "@core/dissonance/storage";
 import { Strings } from "@core/i18n";
 import AddonPage from "@core/ui/components/AddonPage";
 import FontEditor from "@core/ui/settings/pages/Fonts/FontEditor";
-import { useProxy } from "@core/vendetta/storage";
 import { FontDefinition, fonts } from "@lib/addons/fonts";
 import { settings } from "@lib/api/settings";
 import { NavigationNative } from "@metro/common";
@@ -28,7 +28,7 @@ export default function Fonts() {
             installAction={{
                 label: "Install a font",
                 onPress: () => {
-                    navigation.push("BUNNY_CUSTOM_PAGE", {
+                    navigation.push("DISSONANCE_CUSTOM_PAGE", {
                         title: "Import Font",
                         render: () => <FontEditor />
                     });

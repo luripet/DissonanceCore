@@ -1,7 +1,7 @@
+import { showConfirmationAlert } from "@core/dissonance/alerts";
+import { VdPluginManager } from "@core/dissonance/plugins";
+import { purgeStorage } from "@core/dissonance/storage";
 import { formatString, Strings } from "@core/i18n";
-import { showConfirmationAlert } from "@core/vendetta/alerts";
-import { VdPluginManager } from "@core/vendetta/plugins";
-import { purgeStorage } from "@core/vendetta/storage";
 import { findAssetId } from "@lib/api/assets";
 import { clipboard } from "@metro/common";
 import { ActionSheet, ActionSheetRow, Button, TableRow, Text } from "@metro/common/components";
@@ -31,7 +31,7 @@ export default function PluginInfoActionSheet({ plugin, navigation }: PluginInfo
                         icon={findAssetId("WrenchIcon")}
                         onPress={() => {
                             hideSheet("PluginInfoActionSheet");
-                            navigation.push("BUNNY_CUSTOM_PAGE", {
+                            navigation.push("DISSONANCE_CUSTOM_PAGE", {
                                 title: plugin.name,
                                 render: SettingsComponent,
                             });

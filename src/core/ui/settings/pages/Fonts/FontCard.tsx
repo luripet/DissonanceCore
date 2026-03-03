@@ -1,7 +1,7 @@
+import { showConfirmationAlert } from "@core/dissonance/alerts";
+import { useProxy } from "@core/dissonance/storage";
 import { Strings } from "@core/i18n";
 import { CardWrapper } from "@core/ui/components/AddonCard";
-import { showConfirmationAlert } from "@core/vendetta/alerts";
-import { useProxy } from "@core/vendetta/storage";
 import { FontDefinition, fonts, selectFont } from "@lib/addons/fonts";
 import { findAssetId } from "@lib/api/assets";
 import { BundleUpdaterManager } from "@lib/api/native/modules";
@@ -82,7 +82,7 @@ export default function FontCard({ item: font }: CardWrapper<FontDefinition>) {
                         <Stack spacing={12} direction="horizontal">
                             <IconButton
                                 onPress={() => {
-                                    navigation.push("BUNNY_CUSTOM_PAGE", {
+                                    navigation.push("DISSONANCE_CUSTOM_PAGE", {
                                         title: "Edit Font",
                                         render: () => <FontEditor name={font.name} />
                                     });

@@ -1,4 +1,4 @@
-import { awaitStorage, createFileBackend, createMMKVBackend, createStorage, wrapSync } from "@core/vendetta/storage";
+import { awaitStorage, createFileBackend, createMMKVBackend, createStorage, wrapSync } from "@core/dissonance/storage";
 import { writeFile } from "@lib/api/native/fs";
 import { getStoredTheme, getThemeFilePath, isPyonLoader, isThemeSupported } from "@lib/api/native/loader";
 import { awaitStorage as newAwaitStorage } from "@lib/api/storage";
@@ -8,16 +8,16 @@ import { Platform } from "react-native";
 import initColors from "./colors";
 import { applyAndroidAlphaKeys, normalizeToHex } from "./colors/parser";
 import { colorsPref } from "./colors/preferences";
-import { VendettaThemeManifest } from "./colors/types";
-import { updateBunnyColor } from "./colors/updater";
+import { DissonanceThemeManifest } from "./colors/types";
+import { updateDissonanceColor } from "./colors/updater";
 
 export interface VdThemeInfo {
     id: string;
     selected: boolean;
-    data: VendettaThemeManifest;
+    data: DissonanceThemeManifest;
 }
 
-export const themes = wrapSync(createStorage<Record<string, VdThemeInfo>>(createMMKVBackend("VENDETTA_THEMES")));
+export const themes = wrapSync(createStorage<Record<string, VdThemeInfo>>(createMMKVBackend("DISSONANCE_THEMES")));
 
 /**
  * @internal
@@ -31,7 +31,7 @@ export async function writeThemeToNative(theme: VdThemeInfo | {}) {
 }
 
 // Process data for some compatiblity with native side
-function processData(data: VendettaThemeManifest) {
+function processData(data: DissonanceThemeManifest) {
     if (data.semanticColors) {
         const { semanticColors } = data;
 
@@ -88,7 +88,7 @@ export async function fetchTheme(url: string, selected = false) {
 
     if (selected) {
         writeThemeToNative(themes[url]);
-        updateBunnyColor(themes[url].data, { update: true });
+        updateDissonanceColor(themes[url].data, { update: true });
     }
 }
 
@@ -104,10 +104,10 @@ export function selectTheme(theme: VdThemeInfo | null, write = true) {
     );
 
     if (theme == null && write) {
-        updateBunnyColor(null, { update: true });
+        updateDissonanceColor(null, { update: true });
         return writeThemeToNative({});
     } else if (theme) {
-        updateBunnyColor(theme.data, { update: true });
+        updateDissonanceColor(theme.data, { update: true });
         return writeThemeToNative(theme);
     }
 }
@@ -145,7 +145,7 @@ export async function initThemes() {
 
     try {
         if (isPyonLoader()) {
-            writeFile("../vendetta_theme.json", "null");
+            writeFile("../dissonance_theme.json", "null");
         }
 
         await newAwaitStorage(colorsPref);

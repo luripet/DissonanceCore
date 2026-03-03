@@ -3,9 +3,9 @@ import { VdThemeInfo } from "@lib/addons/themes";
 // @ts-ignore
 const pyonLoaderIdentity = globalThis.__PYON_LOADER__;
 // @ts-ignore
-const vendettaLoaderIdentity = globalThis.__vendetta_loader;
+const dissonanceLoaderIdentity = globalThis.__dissonance_loader;
 
-export interface VendettaLoaderIdentity {
+export interface DissonanceLoaderIdentity {
     name: string;
     features: {
         loaderConfig?: boolean;
@@ -19,16 +19,16 @@ export interface VendettaLoaderIdentity {
     };
 }
 
-export function isVendettaLoader() {
-    return vendettaLoaderIdentity != null;
+export function isDissonanceLoader() {
+    return dissonanceLoaderIdentity != null;
 }
 
 export function isPyonLoader() {
     return pyonLoaderIdentity != null;
 }
 
-function polyfillVendettaLoaderIdentity() {
-    if (!isPyonLoader() || isVendettaLoader()) return null;
+function polyfillDissonanceLoaderIdentity() {
+    if (!isPyonLoader() || isDissonanceLoader()) return null;
 
     const loader = {
         name: pyonLoaderIdentity.loaderName,
@@ -38,20 +38,20 @@ function polyfillVendettaLoaderIdentity() {
     if (isLoaderConfigSupported()) loader.features.loaderConfig = true;
     if (isSysColorsSupported()) {
         loader.features.syscolors = {
-            prop: "__vendetta_syscolors"
+            prop: "__dissonance_syscolors"
         };
 
-        Object.defineProperty(globalThis, "__vendetta_syscolors", {
+        Object.defineProperty(globalThis, "__dissonance_syscolors", {
             get: () => getSysColors(),
             configurable: true
         });
     }
     if (isThemeSupported()) {
         loader.features.themes = {
-            prop: "__vendetta_theme"
+            prop: "__dissonance_theme"
         };
 
-        Object.defineProperty(globalThis, "__vendetta_theme", {
+        Object.defineProperty(globalThis, "__dissonance_theme", {
             // get: () => getStoredTheme(),
             get: () => {
                 // PyonXposed only returns keys it parses, making custom keys like Themes+' to gone
@@ -65,36 +65,36 @@ function polyfillVendettaLoaderIdentity() {
         });
     }
 
-    Object.defineProperty(globalThis, "__vendetta_loader", {
+    Object.defineProperty(globalThis, "__dissonance_loader", {
         get: () => loader,
         configurable: true
     });
 
-    return loader as VendettaLoaderIdentity;
+    return loader as DissonanceLoaderIdentity;
 }
 
 export function getLoaderIdentity() {
     if (isPyonLoader()) {
         return pyonLoaderIdentity;
-    } else if (isVendettaLoader()) {
-        return getVendettaLoaderIdentity();
+    } else if (isDissonanceLoader()) {
+        return getDissonanceLoaderIdentity();
     }
 
     return null;
 }
 
-export function getVendettaLoaderIdentity(): VendettaLoaderIdentity | null {
+export function getDissonanceLoaderIdentity(): DissonanceLoaderIdentity | null {
     // @ts-ignore
-    if (globalThis.__vendetta_loader) return globalThis.__vendetta_loader;
-    return polyfillVendettaLoaderIdentity();
+    if (globalThis.__dissonance_loader) return globalThis.__dissonance_loader;
+    return polyfillDissonanceLoaderIdentity();
 }
 
-// add to __vendetta_loader anyway
-getVendettaLoaderIdentity();
+// add to __dissonance_loader anyway
+getDissonanceLoaderIdentity();
 
 export function getLoaderName() {
     if (isPyonLoader()) return pyonLoaderIdentity.loaderName;
-    else if (isVendettaLoader()) return vendettaLoaderIdentity.name;
+    else if (isDissonanceLoader()) return dissonanceLoaderIdentity.name;
 
     return "Unknown";
 }
@@ -107,8 +107,8 @@ export function getLoaderVersion(): string | null {
 export function isLoaderConfigSupported() {
     if (isPyonLoader()) {
         return true;
-    } else if (isVendettaLoader()) {
-        return vendettaLoaderIdentity!!.features.loaderConfig;
+    } else if (isDissonanceLoader()) {
+        return dissonanceLoaderIdentity!!.features.loaderConfig;
     }
 
     return false;
@@ -117,8 +117,8 @@ export function isLoaderConfigSupported() {
 export function isThemeSupported() {
     if (isPyonLoader()) {
         return pyonLoaderIdentity.hasThemeSupport;
-    } else if (isVendettaLoader()) {
-        return vendettaLoaderIdentity!!.features.themes != null;
+    } else if (isDissonanceLoader()) {
+        return dissonanceLoaderIdentity!!.features.themes != null;
     }
 
     return false;
@@ -127,8 +127,8 @@ export function isThemeSupported() {
 export function getStoredTheme(): VdThemeInfo | null {
     if (isPyonLoader()) {
         return pyonLoaderIdentity.storedTheme;
-    } else if (isVendettaLoader()) {
-        const themeProp = vendettaLoaderIdentity!!.features.themes?.prop;
+    } else if (isDissonanceLoader()) {
+        const themeProp = dissonanceLoaderIdentity!!.features.themes?.prop;
         if (!themeProp) return null;
         // @ts-ignore
         return globalThis[themeProp] || null;
@@ -139,9 +139,9 @@ export function getStoredTheme(): VdThemeInfo | null {
 
 export function getThemeFilePath() {
     if (isPyonLoader()) {
-        return "pyoncord/current-theme.json";
-    } else if (isVendettaLoader()) {
-        return "vendetta_theme.json";
+        return "dissonance/current-theme.json";
+    } else if (isDissonanceLoader()) {
+        return "dissonance_theme.json";
     }
 
     return null;
@@ -151,8 +151,8 @@ export function isReactDevToolsPreloaded() {
     if (isPyonLoader()) {
         return Boolean(window.__reactDevTools);
     }
-    if (isVendettaLoader()) {
-        return vendettaLoaderIdentity!!.features.devtools != null;
+    if (isDissonanceLoader()) {
+        return dissonanceLoaderIdentity!!.features.devtools != null;
     }
 
     return false;
@@ -162,12 +162,12 @@ export function getReactDevToolsProp(): string | null {
     if (!isReactDevToolsPreloaded()) return null;
 
     if (isPyonLoader()) {
-        window.__pyoncord_rdt = window.__reactDevTools.exports;
-        return "__pyoncord_rdt";
+        window.__dissonance_rdt = window.__reactDevTools.exports;
+        return "__dissonance_rdt";
     }
 
-    if (isVendettaLoader()) {
-        return vendettaLoaderIdentity!!.features.devtools!!.prop;
+    if (isDissonanceLoader()) {
+        return dissonanceLoaderIdentity!!.features.devtools!!.prop;
     }
 
     return null;
@@ -179,8 +179,8 @@ export function getReactDevToolsVersion() {
     if (isPyonLoader()) {
         return window.__reactDevTools.version || null;
     }
-    if (isVendettaLoader()) {
-        return vendettaLoaderIdentity!!.features.devtools!!.version;
+    if (isDissonanceLoader()) {
+        return dissonanceLoaderIdentity!!.features.devtools!!.version;
     }
 
     return null;
@@ -188,8 +188,8 @@ export function getReactDevToolsVersion() {
 
 export function isSysColorsSupported() {
     if (isPyonLoader()) return pyonLoaderIdentity.isSysColorsSupported;
-    else if (isVendettaLoader()) {
-        return vendettaLoaderIdentity!!.features.syscolors != null;
+    else if (isDissonanceLoader()) {
+        return dissonanceLoaderIdentity!!.features.syscolors != null;
     }
 
     return false;
@@ -199,8 +199,8 @@ export function getSysColors() {
     if (!isSysColorsSupported()) return null;
     if (isPyonLoader()) {
         return pyonLoaderIdentity.sysColors;
-    } else if (isVendettaLoader()) {
-        return vendettaLoaderIdentity!!.features.syscolors!!.prop;
+    } else if (isDissonanceLoader()) {
+        return dissonanceLoaderIdentity!!.features.syscolors!!.prop;
     }
 
     return null;
@@ -208,9 +208,9 @@ export function getSysColors() {
 
 export function getLoaderConfigPath() {
     if (isPyonLoader()) {
-        return "pyoncord/loader.json";
-    } else if (isVendettaLoader()) {
-        return "vendetta_loader.json";
+        return "dissonance/loader.json";
+    } else if (isDissonanceLoader()) {
+        return "dissonance_loader.json";
     }
 
     return "loader.json";

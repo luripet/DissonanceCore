@@ -6,7 +6,7 @@ import { after } from "@lib/api/patcher";
 import { settings } from "@lib/api/settings";
 import { logger } from "@lib/utils/logger";
 import { showToast } from "@ui/toasts";
-import { version } from "bunny-build-info";
+import { version } from "dissonance-build-info";
 import { Platform, type PlatformConstants } from "react-native";
 
 export interface RNConstants extends PlatformConstants {
@@ -99,13 +99,13 @@ export function getDebugInfo() {
 
     return {
         /**
-         * @deprecated use `bunny` field
+         * @deprecated use `dissonance` field
          * */
-        vendetta: {
+        legacy: {
             version: versionHash.split("-")[0],
             loader: getLoaderName(),
         },
-        bunny: {
+        dissonance: {
             version: versionHash,
             loader: {
                 name: getLoaderName(),

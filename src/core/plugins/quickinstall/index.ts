@@ -6,11 +6,11 @@ let patches = [] as (() => unknown)[];
 
 export default defineCorePlugin({
     manifest: {
-        id: "bunny.quickinstall",
+        id: "dissonance.quickinstall",
         name: "QuickInstall",
         version: "1.0.0",
-        description: "Quickly install Vendetta plugins and themes",
-        authors: [{ name: "Vendetta Team" }]
+        description: "Quickly install Dissonance plugins and themes",
+        authors: [{ name: "Dissonance Team" }]
     },
     start() {
         patches = [patchForumPost(), patchUrl()];

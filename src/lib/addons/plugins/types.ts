@@ -1,4 +1,4 @@
-import { BunnyManifest } from "@lib/addons/types";
+import { DissonanceManifest } from "@lib/addons/types";
 import { createStorage } from "@lib/api/storage";
 import { Logger } from "@lib/utils/logger";
 
@@ -23,13 +23,13 @@ export interface PluginSettingsStorage {
     };
 }
 
-export interface BunnyPluginManifest extends BunnyManifest {
+export interface DissonancePluginManifest extends DissonanceManifest {
     readonly type: "plugin";
     readonly spec: 3;
     readonly main: string;
 }
 
-export interface BunnyPluginManifestInternal extends BunnyPluginManifest {
+export interface DissonancePluginManifestInternal extends DissonancePluginManifest {
     readonly parentRepository: string;
     readonly jsPath?: string;
 }
@@ -41,15 +41,15 @@ export interface PluginInstance {
 }
 
 export interface PluginInstanceInternal extends PluginInstance {
-    readonly manifest: BunnyPluginManifest;
+    readonly manifest: DissonancePluginManifest;
 }
 
-export interface BunnyPluginProperty {
-    readonly manifest: BunnyPluginManifestInternal;
+export interface DissonancePluginProperty {
+    readonly manifest: DissonancePluginManifestInternal;
     readonly logger: Logger;
     createStorage<T extends object>(): ReturnType<typeof createStorage<T>>;
 }
 
-export type BunnyPluginObject = typeof window.bunny & {
-    plugin: BunnyPluginProperty;
+export type DissonancePluginObject = typeof window.dissonance & {
+    plugin: DissonancePluginProperty;
 };

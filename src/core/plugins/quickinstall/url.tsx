@@ -1,6 +1,6 @@
+import { showConfirmationAlert } from "@core/dissonance/alerts";
+import { VdPluginManager } from "@core/dissonance/plugins";
 import { formatString, Strings } from "@core/i18n";
-import { showConfirmationAlert } from "@core/vendetta/alerts";
-import { VdPluginManager } from "@core/vendetta/plugins";
 import { installTheme } from "@lib/addons/themes";
 import { findAssetId } from "@lib/api/assets";
 import { isThemeSupported } from "@lib/api/native/loader";

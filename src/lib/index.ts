@@ -20,10 +20,10 @@ import { proxyLazy } from "./utils/lazy";
 
 /**
  * @internal
- * @deprecated Moved to top level (bunny.*)
+ * @deprecated Moved to top level (dissonance.*)
  */
 export const managers = proxyLazy(() => {
-    console.warn("bunny.managers.* is deprecated, and moved the top level (bunny.*). bunny.managers will be eventually removed soon");
+    console.warn("dissonance.managers.* is deprecated, and moved the top level (dissonance.*). dissonance.managers will be eventually removed soon");
 
     return {
         get fonts() { return fonts; },
@@ -37,7 +37,7 @@ const _disposer = [] as Array<() => unknown>;
 export function unload() {
     for (const d of _disposer) if (typeof d === "function") d();
     // @ts-expect-error
-    delete window.bunny;
+    delete window.dissonance;
 }
 
 /**

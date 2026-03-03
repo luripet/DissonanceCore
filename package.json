@@ -1,9 +1,9 @@
 {
-    "name": "bunny",
+    "name": "dissonance",
     "private": true,
     "author": {
-        "name": "Pyoncord Team",
-        "url": "https://github.com/pyoncord"
+        "name": "Dissonance Team",
+        "url": "https://github.com/dissonance"
     },
     "scripts": {
         "build": "node scripts/build.mjs",
