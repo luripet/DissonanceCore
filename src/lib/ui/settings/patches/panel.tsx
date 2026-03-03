@@ -15,7 +15,7 @@ function SettingsSection() {
             <LegacyFormSection key={sect} title={sect}>
                 { /** Is usePredicate here safe? */}
                 {registeredSections[sect].filter(r => r.usePredicate?.() ?? true).map((row, i, arr) => (
-                    <>
+                    <React.Fragment key={row.key}>
                         <LegacyFormRow
                             label={row.title()}
                             leading={<LegacyFormIcon source={row.icon} />}
@@ -23,7 +23,7 @@ function SettingsSection() {
                             onPress={wrapOnPress(row.onPress, navigation, row.render, row.title())}
                         />
                         {i !== arr.length - 1 && <LegacyFormDivider />}
-                    </>
+                    </React.Fragment>
                 ))}
             </LegacyFormSection>
         ))}
@@ -35,10 +35,6 @@ export function patchPanelUI(unpatches: (() => void | boolean)[]) {
         unpatches.push(
             after("default", findByNameLazy("getScreens", false), (_a, screens) => ({
                 ...screens,
-                DissonanceCustomPage: {
-                    title: "Dissonance",
-                    render: () => <CustomPageRenderer />
-                },
                 DISSONANCE_CUSTOM_PAGE: {
                     title: "Dissonance",
                     render: () => <CustomPageRenderer />
@@ -74,4 +70,3 @@ export function patchPanelUI(unpatches: (() => void | boolean)[]) {
 
     }
 }
-

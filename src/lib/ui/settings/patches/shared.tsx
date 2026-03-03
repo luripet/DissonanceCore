@@ -9,11 +9,14 @@ export const CustomPageRenderer = React.memo(() => {
     const navigation = NavigationNative.useNavigation();
     const route = NavigationNative.useRoute();
 
-    const { render: PageComponent, ...args } = route.params;
+    const { render: PageComponent, noErrorBoundary, ...args } = route.params ?? {};
 
     React.useEffect(() => void navigation.setOptions({ ...args }), []);
 
-    return <ErrorBoundary><PageComponent /></ErrorBoundary>;
+    if (typeof PageComponent !== "function") return null;
+
+    const content = <PageComponent />;
+    return noErrorBoundary ? content : <ErrorBoundary>{content}</ErrorBoundary>;
 });
 
 export function wrapOnPress(
@@ -39,4 +42,3 @@ export function wrapOnPress(
         });
     };
 }
-

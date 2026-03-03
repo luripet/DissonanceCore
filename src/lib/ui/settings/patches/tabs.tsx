@@ -9,12 +9,6 @@ import { CustomPageRenderer, wrapOnPress } from "./shared";
 const settingConstants = findByPropsLazy("SETTING_RENDERER_CONFIG");
 const SettingsOverviewScreen = findByNameLazy("SettingsOverviewScreen", false);
 
-function useIsFirstRender() {
-    let firstRender = false;
-    React.useEffect(() => void (firstRender = true), []);
-    return firstRender;
-}
-
 export function patchTabsUI(unpatches: (() => void | boolean)[]) {
     const getRows = () => Object.values(registeredSections)
         .flatMap(sect => sect.map(row => ({
@@ -40,14 +34,6 @@ export function patchTabsUI(unpatches: (() => void | boolean)[]) {
         configurable: true,
         get: () => ({
             ...rendererConfigValue,
-            DissonanceCustomPage: {
-                type: "route",
-                title: () => "Dissonance",
-                screen: {
-                    route: "DissonanceCustomPage",
-                    getComponent: () => CustomPageRenderer
-                }
-            },
             DISSONANCE_CUSTOM_PAGE: {
                 type: "route",
                 title: () => "Dissonance",
@@ -70,12 +56,19 @@ export function patchTabsUI(unpatches: (() => void | boolean)[]) {
         });
     });
 
+    let isFirstRender = true;
     unpatches.push(after("default", SettingsOverviewScreen, (_, ret) => {
-        if (useIsFirstRender()) return; // :shrug:
+        if (isFirstRender) {
+            isFirstRender = false;
+            return;
+        }
 
-        const { sections } = findInReactTree(ret, i => i.props?.sections).props;
+        const sections = findInReactTree(ret, i => i?.props?.sections)?.props?.sections;
+        if (!Array.isArray(sections)) return;
+
         // Credit to @palmdevs - https://discord.com/channels/1196075698301968455/1243605828783571024/1307940348378742816
-        let index = -~sections.findIndex((i: any) => i.settings.includes("ACCOUNT")) || 1;
+        const accountIndex = sections.findIndex((i: any) => Array.isArray(i?.settings) && i.settings.includes("ACCOUNT"));
+        let index = accountIndex === -1 ? 1 : accountIndex + 1;
 
         Object.keys(registeredSections).forEach(sect => {
             sections.splice(index++, 0, {
