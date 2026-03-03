@@ -1,7 +1,10 @@
 import { VdThemeInfo } from "@lib/addons/themes";
 
 // @ts-ignore
-const pyonLoaderIdentity = globalThis.__PYON_LOADER__;
+const pyonLoaderIdentity = globalThis.__PYON_LOADER__
+    // iOS Dissonance loader exposes Pyon-compatible fields under this key.
+    // @ts-ignore
+    ?? globalThis.__DISSONANCE_LOADER__;
 // @ts-ignore
 const dissonanceLoaderIdentity = globalThis.__dissonance_loader;
 
