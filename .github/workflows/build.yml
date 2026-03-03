@@ -15,13 +15,15 @@ jobs:
       - name: Checkout DissonanceCore
         uses: actions/checkout@v4
 
-      - name: Checkout DissonanceBuilds
-        uses: actions/checkout@v4
-        with:
-          repository: luripet/DissonanceBuilds
-          path: builds
-          token: ${{ secrets.BUILDS_TOKEN }}
-          fetch-depth: 0
+      - name: Clone DissonanceBuilds
+        env:
+          BUILDS_REPO: luripet/DissonanceBuilds
+          BUILDS_TOKEN: ${{ secrets.BUILDS_TOKEN }}
+        run: |
+          set -euo pipefail
+          remote_url="https://x-access-token:${BUILDS_TOKEN}@github.com/${BUILDS_REPO}.git"
+          git clone "$remote_url" "$GITHUB_WORKSPACE/builds"
+          git -C "$GITHUB_WORKSPACE/builds" fetch origin "+refs/heads/*:refs/remotes/origin/*" || true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -40,7 +42,13 @@ jobs:
       - name: Push Build Artifacts
         run: |
           cd "$GITHUB_WORKSPACE/builds"
-          git checkout -B "$GITHUB_REF_NAME"
+          if git show-ref --verify --quiet "refs/remotes/origin/$GITHUB_REF_NAME"; then
+            git checkout -B "$GITHUB_REF_NAME" "refs/remotes/origin/$GITHUB_REF_NAME"
+          elif git rev-parse --verify HEAD >/dev/null 2>&1; then
+            git checkout -B "$GITHUB_REF_NAME"
+          else
+            git checkout --orphan "$GITHUB_REF_NAME"
+          fi
           find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
           cp -R "$GITHUB_WORKSPACE/dist/." .
           git config --local user.email "actions@github.com"
