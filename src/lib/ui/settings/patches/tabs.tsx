@@ -71,6 +71,8 @@ export function patchTabsUI(unpatches: (() => void | boolean)[]) {
         let index = accountIndex === -1 ? 1 : accountIndex + 1;
 
         Object.keys(registeredSections).forEach(sect => {
+            if (registeredSections[sect].length === 0) return;
+
             sections.splice(index++, 0, {
                 label: sect,
                 title: sect,

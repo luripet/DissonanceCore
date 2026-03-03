@@ -53,7 +53,7 @@ export default function initSettings() {
     // Compat for plugins which injects into the settings
     // Flaw: in the old UI, this will be displayed anyway with no items
     registerSection({
-        name: "Dissonance",
+        name: "DissonanceCompat",
         items: []
     });
 }
