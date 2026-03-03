@@ -56,13 +56,7 @@ export function patchTabsUI(unpatches: (() => void | boolean)[]) {
         });
     });
 
-    let isFirstRender = true;
     unpatches.push(after("default", SettingsOverviewScreen, (_, ret) => {
-        if (isFirstRender) {
-            isFirstRender = false;
-            return;
-        }
-
         const sections = findInReactTree(ret, i => i?.props?.sections)?.props?.sections;
         if (!Array.isArray(sections)) return;
 
@@ -72,6 +66,7 @@ export function patchTabsUI(unpatches: (() => void | boolean)[]) {
 
         Object.keys(registeredSections).forEach(sect => {
             if (registeredSections[sect].length === 0) return;
+            if (sections.some((s: any) => s?.label === sect || s?.title === sect)) return;
 
             sections.splice(index++, 0, {
                 label: sect,
